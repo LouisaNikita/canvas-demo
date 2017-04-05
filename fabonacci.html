@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>canvas-fabonacci</title>
+</head>
+<style type="text/css">
+    canvas {
+        background: #e1e1eb;
+        width: 800px;
+        height: 600px;
+    }
+</style>
+
+<body>
+    <canvas id="fab-canvas"></canvas>
+    <script type="text/javascript">
+        let canvas = document.getElementById('fab-canvas');
+        let ctx = canvas.getContext('2d');
+        canvas.width = 800;
+        canvas.height = 600;
+        let center = {
+            x: 400,
+            y: 300
+        };
+        // 绘制曲线
+        // 圆心移动轨迹:上右下左(看怎么画) 顺时针 移动距离f(n-2)
+        // r:半径
+        // n:当前位置
+        // prev2R: 上上一个半径
+        function drawFabonacci(r, n, prev2R) {
+            //移动圆点位置
+            if (n > 1) {
+                switch (n % 4) {
+                    case 2:
+                        //up
+                        center.y = center.y - 3 * prev2R;
+                        break;
+                    case 3:
+                        //right
+                        center.x = center.x + 3 * prev2R;
+                        break;
+                    case 0:
+                        //down
+                        center.y = center.y + 3 * prev2R;
+                        break;
+                    case 1:
+                        //left
+                        center.x = center.x - 3 * prev2R;
+                        break;
+                }
+            }
+            //绘制圆弧
+            ctx.beginPath();
+            ctx.arc(center.x, center.y, 3 * r, Math.PI * 0.5 * (n - 1), Math.PI * 0.5 * n, false);
+            ctx.strokeStyle = '#000';
+            ctx.stroke();
+        }
+
+        //获取斐波那契数列方法
+        function fabonacci(n) {
+            let fabArr = [];
+            let i = 0;
+            while (i < n) {
+                if (i <= 1) {
+                    fabArr.push(1);
+                } else {
+                    fabArr.push(fabArr[i - 1] + fabArr[i - 2]);
+                }
+                i++;
+            }
+            return fabArr;
+        }
+
+        //获取数列绘制曲线
+        let data = fabonacci(11);
+        for (var i = 0; i < data.length; i++) {
+            drawFabonacci(data[i], i, data[i - 2]);
+        }
+    </script>
+</body>
+
+</html>
